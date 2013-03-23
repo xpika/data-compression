@@ -1,4 +1,4 @@
-module Lzw where
+module Lzw where 
 import Debug.Trace
 import Data.List 
 import Data.Char
@@ -37,7 +37,8 @@ unzipit = viaNum unzipit'
 unzipit' [] = []
 unzipit' (x:xs) = unzipit'' (Map.fromList (zip (Data.List.map ((:[]) ) [0..lengthOfKeys]) [0..])) x xs
 unzipit'' library buffer [] =  library Map.!> buffer
-unzipit'' library buffer (x:xs) = let key = library Map.!> buffer
+unzipit'' library buffer (x:xs) = let Just key = buffer `Map.lookupR` library 
+                                      librarySize = Map.size library 
                                       (  output
                                         ,buffer'
                                         ,library'
@@ -47,7 +48,9 @@ unzipit'' library buffer (x:xs) = let key = library Map.!> buffer
                                                                 ,library
                                                                 )
                                                      _ -> (  (++) key
-                                                           , x
-                                                            , Map.insert (key ++ library Map.!> x) (Map.size library) library 
+                                                            , x
+                                                            , let Just key' | x == librarySize = Just key
+                                                                            | otherwise =  x `Map.lookupR` library  
+                                                              in Map.insert (key ++ (take 1 key')) librarySize library 
                                                            )
                                   in output $ unzipit'' library' buffer' xs
