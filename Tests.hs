@@ -1,36 +1,23 @@
 module Main where
 
 import Lzw
-import Data.ByteString (pack,unpack)
+import qualified Data.ByteString as B
 import Data.Char
 
-zipitString str = zipit (pack (map (fromIntegral . ord) str))
-unzipitString str = (map chr (map fromIntegral (unpack (unzipit str))))
+zipitString str = zipit (B.pack (map (fromIntegral . ord) str))
+unzipitString str = (map chr (map fromIntegral (B.unpack (unzipit str))))
 
+example str = do 
+              print str
+              let zipped = zipitString str
+              print zipped 
+              let unzipped = unzipitString zipped
+              print unzipped
+              putStrLn ("~~~~ "++show (B.length zipped)++"/"++ (show $ length unzipped))
+            
 main = do
-       let toZip = "TOBEORNOTTOBEORTOBEORNOT" 
-       print toZip
-       let zipped = zipitString toZip
-       print zipped
-       let unzipped = unzipitString zipped
-       print unzipped
-       print "~~~~"
-       let toZip = "aaaaaa"
-       print toZip
-       let zipped = zipitString toZip
-       print zipped
-       let unzipped = unzipitString zipped
-       print unzipped
-       print "~~~~"
-       let toZip = "abababab"
-       print toZip
-       let zipped = zipitString toZip
-       print zipped
-       let unzipped = unzipitString zipped
-       print unzipped
-       let toZip = "abcabcabcabcabcabc"
-       print toZip
-       let zipped = zipitString toZip
-       print zipped
-       let unzipped = unzipitString zipped
-       print unzipped
+       example "TOBEORNOTTOBEORTOBEORNOT" 
+       example "aaaaaa"
+       example "abababab"
+       example "abcabcabcabcabcabc"
+       example "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam dictum nisi et ipsum ornare fermentum. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas nullam. "
