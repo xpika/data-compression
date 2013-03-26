@@ -13,4 +13,4 @@ extra-source-files: Test/rot13test.hs
 
 executable rotateMe
     main-is:            Main.hs
-    build-depends:      base , containers
+    build-depends:      base , containers, ByteString

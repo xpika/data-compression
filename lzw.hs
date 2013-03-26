@@ -6,12 +6,13 @@ import qualified Data.Bimap as Map
 import Data.Maybe
 import Control.Monad
 import Control.Arrow
+import Data.ByteString (pack,unpack)
 
-viaNum f d = map chr (f (map ord d))
+viaNum f d = pack ( map fromIntegral (f (map fromIntegral (unpack d))))
 
 lengthOfKeys = 127 
 
-zipit :: (String -> String)
+--zipit :: (String -> String)
 zipit = viaNum zipit'
 zipit' [] = []
 zipit' (x:xs) = zipit'' (Map.fromList (zip (Data.List.map ((:[]) ) [0..lengthOfKeys]) [0..])) x xs
@@ -32,7 +33,7 @@ zipit'' library buffer (x:xs) = let key = [buffer,x]
                                 in output $ zipit'' library' buffer' xs
 
 
-unzipit :: (String -> String)
+--unzipit :: (String -> String)
 unzipit = viaNum unzipit'
 unzipit' [] = []
 unzipit' (x:xs) = unzipit'' (Map.fromList (zip (Data.List.map ((:[]) ) [0..lengthOfKeys]) [0..])) x xs
