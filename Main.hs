@@ -10,3 +10,4 @@ main = do
          [arg] -> case arg of
              "zip" -> Data.ByteString.interact zipit
              "unzip" -> Data.ByteString.interact unzipit
+             _ -> putStrLn "Usage: zip|unzip"
