@@ -1,5 +1,5 @@
 name:               haskell-compression
-version:            1.0
+version:            0.1
 synopsis:           
 description:        
 category:           System
@@ -13,3 +13,8 @@ build-type:         Simple
 executable hs-compress
     main-is:            Main.hs
     build-depends:      base , containers, bytestring,bimap
+
+    
+library
+  exposed-modules:    Codec.HaskellCompression
+  build-depends:      base , containers, bytestring,bimap

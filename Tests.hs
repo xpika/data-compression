@@ -1,6 +1,6 @@
 module Main where
 
-import Lzw
+import Codec.HaskellCompression
 import qualified Data.ByteString.Char8 as B
 
 zipitString :: [Char] -> B.ByteString

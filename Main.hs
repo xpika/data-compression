@@ -1,6 +1,6 @@
 module Main where
 
-import Lzw
+import Codec.HaskellCompression
 import System.Environment
 import qualified Data.ByteString (interact) 
 
