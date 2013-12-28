@@ -1,11 +1,13 @@
 module Main where
 
 import Lzw
-import qualified Data.ByteString as B
-import Data.Char
+import qualified Data.ByteString.Char8 as B
 
-zipitString str = zipit (B.pack (map (fromIntegral . ord) str))
-unzipitString str = (map chr (map fromIntegral (B.unpack (unzipit str))))
+zipitString :: [Char] -> B.ByteString
+zipitString  = zipit  . B.pack
+
+unzipitString :: B.ByteString -> [Char]
+unzipitString  = B.unpack . unzipit
 
 example str = do 
               print str

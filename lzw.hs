@@ -1,18 +1,14 @@
 module Lzw where 
-import Debug.Trace
-import Data.List 
-import Data.Char
+import Data.List
 import qualified Data.Bimap as Map
-import Data.Maybe
-import Control.Monad
-import Control.Arrow
-import Data.ByteString (pack,unpack)
+
+import Data.ByteString (pack,unpack,ByteString)
 
 viaNum f d = pack ( map fromIntegral (f (map fromIntegral (unpack d))))
 
-lengthOfKeys = 127 
+lengthOfKeys = 127
 
---zipit :: (String -> String)
+zipit :: ByteString-> ByteString
 zipit = viaNum zipit'
 zipit' [] = []
 zipit' (x:xs) = zipit'' (Map.fromList (zip (Data.List.map ((:[]) ) [0..lengthOfKeys]) [0..])) x xs
@@ -33,7 +29,8 @@ zipit'' library buffer (x:xs) = let key = [buffer,x]
                                 in output $ zipit'' library' buffer' xs
 
 
---unzipit :: (String -> String)
+
+unzipit :: ByteString-> ByteString                            
 unzipit = viaNum unzipit'
 unzipit' [] = []
 unzipit' (x:xs) = unzipit'' (Map.fromList (zip (Data.List.map ((:[]) ) [0..lengthOfKeys]) [0..])) x xs
