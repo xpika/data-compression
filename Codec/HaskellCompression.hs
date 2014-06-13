@@ -35,7 +35,7 @@ unzipit'' library buffer xs = let
    ref = fromJust (if headxs == librarySize then Just key else headxs `Map.lookupR` library)
    ( output ,buffer',library') = case Map.lookup [buffer,headxs] library of
       Just n -> ( [] ,n ,library)
-      _ -> (key, headxs ,Map.insert (key ++ ref) librarySize library )
+      _ -> (key, headxs ,Map.insert (key ++ (take 1 ref)) librarySize library )
    in output ++ unzipit'' library' buffer' (tail xs)
 
 
