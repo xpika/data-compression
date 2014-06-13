@@ -3,13 +3,11 @@ where
 import Data.List
 import qualified Data.Bimap as Map
 import Data.Maybe
-
 import Data.BooleanList
-
 import qualified Data.ByteString as B (pack,unpack,ByteString)
 
 
-viaNum f d = B.pack ( map fromIntegral (f (map fromIntegral (B.unpack d))))
+viaNum f d = B.pack ( map fromIntegral (f ( int8Chunks $ toBoolean8 $ map fromIntegral (B.unpack d))))
 
 lengthOfKeys = 127
 
@@ -23,8 +21,7 @@ zipit'' library buffer xs = let
   in if xs == [] then [buffer] else output ++ zipit'' library' buffer' (tail xs)
 
 unzipit = viaNum unzipit'
-unzipit' [] = []
-unzipit' (x:xs) = unzipit'' (Map.fromList (zip (Data.List.map ((:[]) ) [0..lengthOfKeys]) [0..])) x xs
+unzipit' xs = if xs == [] then [] else unzipit'' (Map.fromList (zip (Data.List.map ((:[]) ) [0..lengthOfKeys]) [0..])) (head xs) (tail xs)
 unzipit'' library buffer xs = let 
    headxs = head xs
    Just key = buffer `Map.lookupR` library 
