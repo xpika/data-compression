@@ -17,4 +17,4 @@ executable hs-compress
     
 library
   exposed-modules:    Codec.HaskellCompression
-  build-depends:      base , containers, bytestring,bimap
+  build-depends:      base , containers, bytestring,bimap,booleanlist
