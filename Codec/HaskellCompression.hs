@@ -14,20 +14,17 @@ viaNum f d = B.pack ( map fromIntegral (f (map fromIntegral (B.unpack d))))
 lengthOfKeys = 127
 
 zipit = viaNum zipit'
-zipit' [] = []
-zipit' (x:xs) = zipit'' (Map.fromList (zip (Data.List.map ((:[]) ) [0..lengthOfKeys]) [0..])) x xs
-zipit'' library buffer [] = buffer : []
-zipit'' library buffer (x:xs) = let 
-  key = [buffer,x]
+zipit' xs = if xs == [] then [] else zipit'' (Map.fromList (zip (Data.List.map ((:[]) ) [0..lengthOfKeys]) [0..])) (head xs) (tail xs)
+zipit'' library buffer xs = let 
+  key = [buffer,head xs]
   (output,buffer',library') = case Map.lookup key library of
-     Just n -> (id,n,library)
-     _ -> ((:) buffer ,x ,Map.insert key (Map.size library) library )
-  in output $ zipit'' library' buffer' xs
+     Just n -> ([],n,library)
+     _ -> ( [buffer],head xs,Map.insert key (Map.size library) library)
+  in if xs == [] then [buffer] else output ++ zipit'' library' buffer' (tail xs)
 
 unzipit = viaNum unzipit'
 unzipit' [] = []
 unzipit' (x:xs) = unzipit'' (Map.fromList (zip (Data.List.map ((:[]) ) [0..lengthOfKeys]) [0..])) x xs
-unzipit'' library buffer [] =  library Map.!> buffer
 unzipit'' library buffer xs = let 
    headxs = head xs
    Just key = buffer `Map.lookupR` library 
@@ -36,6 +33,6 @@ unzipit'' library buffer xs = let
    ( output ,buffer',library') = case Map.lookup [buffer,headxs] library of
       Just n -> ( [] ,n ,library)
       _ -> (key, headxs ,Map.insert (key ++ (take 1 ref)) librarySize library )
-   in output ++ unzipit'' library' buffer' (tail xs)
-
+   in if xs == [] then library Map.!> buffer
+                  else output ++ unzipit'' library' buffer' (tail xs)
 
