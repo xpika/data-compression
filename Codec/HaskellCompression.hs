@@ -11,11 +11,12 @@ viaNum f d = B.pack ( map fromIntegral (f ( map fromIntegral (B.unpack d))))
 
 lengthOfKeys = 127
 things xs = (head xs,tail xs)
+
+zipit :: B.ByteString -> B.ByteString
 zipit = viaNum zipitNew
-zipitNew = zipit' 
-zipit' xs = (if xs' == [] then [] else zipit'' (Map.fromList (zip (Data.List.map ((:[])) [0..lengthOfKeys]) [0..])) headxs tailxs)
-  where (headxs,tailxs) = things xs'
-        xs' = xs
+zipitNew = zipit'
+zipit' xs = (if xs == [] then [] else zipit'' (Map.fromList (zip (Data.List.map ((:[])) [0..lengthOfKeys]) [0..])) headxs tailxs)
+  where (headxs,tailxs) = things xs
 
 zipit'' library buffer xs = let 
   (headxs,tailxs) = things xs
