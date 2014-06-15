@@ -9,6 +9,14 @@ zipitString  = zipit  . B.pack
 unzipitString :: B.ByteString -> [Char]
 unzipitString  = B.unpack . unzipit
 
+examples = [
+   "TOBEORNOTTOBEORTOBEORNOT" 
+  ,"aaaaaa"
+  ,"abababab"
+  ,"abcabcabcabcabcabc"
+  ,"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam dictum nisi et ipsum ornare fermentum. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas nullam. "
+  ]
+
 example str = do 
               print str
               let zipped = zipitString str
@@ -18,8 +26,6 @@ example str = do
               putStrLn ("~~~~ "++show (B.length zipped)++"/"++ (show $ length unzipped))
             
 main = do
-       example "TOBEORNOTTOBEORTOBEORNOT" 
-       example "aaaaaa"
-       example "abababab"
-       example "abcabcabcabcabcabc"
-       example "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam dictum nisi et ipsum ornare fermentum. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas nullam. "
+       mapM_ example examples
+
+
