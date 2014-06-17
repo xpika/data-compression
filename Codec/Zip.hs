@@ -8,18 +8,25 @@ import qualified Data.ByteString as B (pack,unpack,ByteString)
 import Control.Arrow
 
 viaNum f d = B.pack ( map fromIntegral (f ( map fromIntegral (B.unpack d))))
+
+viaBool f ns = int8Chunks (f (toBoolean8s ns))
+
 lengthOfKeys = 127
 things xs = (head xs,tail xs)
 
 zipit :: B.ByteString -> B.ByteString
-zipit = viaNum zipitNew
-zipitNew = zipit'
-zipit' xs = (if xs == [] then [] else zipit'' (Map.fromList (zip (Data.List.map ((:[])) [0..lengthOfKeys]) [0..])) headxs tailxs)
-  where (headxs,tailxs) = things xs
+zipit = viaNum (viaBool zipit')
 
-zipit'' library buffer xs = let 
-  (headxs,tailxs) = things xs
-  key = [buffer,headxs]
-  in if xs == [] then [buffer] else case Map.lookup key library of
-     Just n -> zipit'' library n tailxs
-     _ -> [buffer] ++ zipit'' (Map.insert key (Map.size library) library) headxs tailxs
+initdb = Map.fromList (Data.List.zipWith (\x y ->(x,y)) (integersToPaddedBooleansLists 8 [0..lengthOfKeys]) [0..] )
+
+zipit' :: [Bool] -> [Bool]
+zipit' xs = (if xs == [] then [] else zipit'' initdb headxs tailxs)
+  where (headxs,tailxs) = (take 8 xs,drop 8 xs)
+  
+zipit'' :: Map.Bimap [Bool] Int -> [Bool] -> [Bool] -> [Bool]
+zipit'' library buffer xs = let
+  (headxs,tailxs) = (take 8 xs,drop 8 xs)
+  key = buffer++headxs
+  in if xs == [] then buffer else case Map.lookup key library of
+     Just n -> zipit'' library (integerToBooleanListPadded 8 n) tailxs
+     _ -> buffer ++  zipit'' (Map.insert key (Map.size library) library) headxs tailxs
