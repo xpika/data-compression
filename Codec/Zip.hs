@@ -12,7 +12,7 @@ viaNum f d = B.pack ( map fromIntegral (f ( map fromIntegral (B.unpack d))))
 viaBool f ns = int8Chunks (f (toBoolean8s ns))
 
 lengthOfKeys = 127
-things xs = (head xs,tail xs)
+things xs = (take 8 xs,drop 8 xs)
 
 zipit :: B.ByteString -> B.ByteString
 zipit = viaNum (viaBool zipit')
@@ -21,11 +21,11 @@ initdb = Map.fromList (Data.List.zipWith (\x y ->(x,y)) (integersToPaddedBoolean
 
 zipit' :: [Bool] -> [Bool]
 zipit' xs = (if xs == [] then [] else zipit'' initdb headxs tailxs)
-  where (headxs,tailxs) = (take 8 xs,drop 8 xs)
+  where (headxs,tailxs) = things xs
   
 zipit'' :: Map.Bimap [Bool] Int -> [Bool] -> [Bool] -> [Bool]
 zipit'' library buffer xs = let
-  (headxs,tailxs) = (take 8 xs,drop 8 xs)
+  (headxs,tailxs) = things xs
   key = buffer++headxs
   in if xs == [] then buffer else case Map.lookup key library of
      Just n -> zipit'' library (integerToBooleanListPadded 8 n) tailxs
