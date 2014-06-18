@@ -1,4 +1,4 @@
-module Codec.Zip where
+module Codec.HaskellCompression.Zip where
 
 import Data.List
 import qualified Data.Bimap as Map

@@ -1,4 +1,4 @@
-module Codec.Unzip
+module Codec.HaskellCompression.Unzip
 where 
 import Data.List
 import qualified Data.Bimap as Map
@@ -12,7 +12,6 @@ viaBool f ns = int8Chunks (f (toBoolean8s ns))
 viaNum f d = B.pack ( map fromIntegral (f ( map fromIntegral (B.unpack d))))
 
 lengthOfKeys = 127
-things xs = (head xs,tail xs)
 
 things2 xs = (take 8 xs,drop 8 xs)
 
@@ -25,7 +24,7 @@ unzipit' xs = if xs == [] then [] else  unzipit'' initdb headxs tailxs
   where (headxs,tailxs) = things2 xs
 
 unzipit'' :: Map.Bimap [Bool] Int -> [Bool] -> [Bool] -> [Bool]
-unzipit'' library buffer xs = let 
+unzipit'' library buffer xs = let
 	(headxs,tailxs) = things2 xs
 	Just key = (booleanListToInteger buffer) `Map.lookupR` library
  	librarySize = Map.size library 
