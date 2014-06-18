@@ -1,31 +1,21 @@
-module Codec.HaskellCompression.Unzip
-where 
+module Codec.HaskellCompression.Unzip where 
 import Data.List
 import qualified Data.Bimap as Map
 import Data.Maybe
 import Data.BooleanList
 import qualified Data.ByteString as B (pack,unpack,ByteString)
 import Control.Arrow
-
-viaBool f ns = int8Chunks (f (toBoolean8s ns))
-
-viaNum f d = B.pack ( map fromIntegral (f ( map fromIntegral (B.unpack d))))
-
-lengthOfKeys = 127
-
-things2 xs = (take 8 xs,drop 8 xs)
+import Codec.HaskellCompression.Shared
 
 unzipit = viaNum (viaBool unzipit')
 
-initdb = Map.fromList (Data.List.zipWith (\x y ->(x,y)) (integersToPaddedBooleansLists 8 [0..lengthOfKeys]) [0..] )
-
 unzipit' :: [Bool] -> [Bool]
 unzipit' xs = if xs == [] then [] else  unzipit'' initdb headxs tailxs
-  where (headxs,tailxs) = things2 xs
+  where (headxs,tailxs) = things xs
 
 unzipit'' :: Map.Bimap [Bool] Int -> [Bool] -> [Bool] -> [Bool]
 unzipit'' library buffer xs = let
-	(headxs,tailxs) = things2 xs
+	(headxs,tailxs) = things xs
 	Just key = (booleanListToInteger buffer) `Map.lookupR` library
  	librarySize = Map.size library 
 	ref =  fromJust (if ((booleanListToInteger headxs) ==  librarySize) then Just key else (booleanListToInteger headxs) `Map.lookupR` library) 

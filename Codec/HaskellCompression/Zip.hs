@@ -7,17 +7,10 @@ import Data.BooleanList
 import qualified Data.ByteString as B (pack,unpack,ByteString)
 import Control.Arrow
 
-viaNum f d = B.pack ( map fromIntegral (f ( map fromIntegral (B.unpack d))))
-
-viaBool f ns = int8Chunks (f (toBoolean8s ns))
-
-lengthOfKeys = 127
-things xs = (take 8 xs,drop 8 xs)
+import Codec.HaskellCompression.Shared
 
 zipit :: B.ByteString -> B.ByteString
 zipit = viaNum (viaBool zipit')
-
-initdb = Map.fromList (Data.List.zipWith (\x y ->(x,y)) (integersToPaddedBooleansLists 8 [0..lengthOfKeys]) [0..] )
 
 zipit' :: [Bool] -> [Bool]
 zipit' xs = (if xs == [] then [] else zipit'' initdb headxs tailxs)
