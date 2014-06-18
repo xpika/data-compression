@@ -12,7 +12,6 @@ viaNum f d = B.pack ( map fromIntegral (f ( map fromIntegral (B.unpack d))))
 viaBool f ns = int8Chunks (f (toBoolean8s ns))
 
 lengthOfKeys = 127
-things xs = (take 8 xs,drop 8 xs)
 
 initdb :: Map.Bimap [Bool] Int
 initdb = Map.fromList (Data.List.zipWith (\x y ->(x,y)) (integersToPaddedBooleansLists 8 [0..lengthOfKeys]) [0..] )
