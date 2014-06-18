@@ -16,3 +16,5 @@ things xs = (take 8 xs,drop 8 xs)
 
 initdb :: Map.Bimap [Bool] Int
 initdb = Map.fromList (Data.List.zipWith (\x y ->(x,y)) (integersToPaddedBooleansLists 8 [0..lengthOfKeys]) [0..] )
+
+via = viaNum . viaBool

@@ -10,16 +10,12 @@ import Control.Arrow
 import Codec.HaskellCompression.Shared
 
 zipit :: B.ByteString -> B.ByteString
-zipit = viaNum (viaBool zipit')
-
-zipit' :: [Bool] -> [Bool]
-zipit' xs = (if xs == [] then [] else zipit'' initdb headxs tailxs)
-  where (headxs,tailxs) = things xs
+zipit = via (\xs -> let (headxs,tailxs) = things xs in if xs == [] then [] else zipit' initdb headxs tailxs)
   
-zipit'' :: Map.Bimap [Bool] Int -> [Bool] -> [Bool] -> [Bool]
-zipit'' library buffer xs = let
+zipit' :: Map.Bimap [Bool] Int -> [Bool] -> [Bool] -> [Bool]
+zipit' library buffer xs = let
   (headxs,tailxs) = things xs
   key = buffer++headxs
   in if xs == [] then buffer else case Map.lookup key library of
-     Just n -> zipit'' library (integerToBooleanListPadded 8 n) tailxs
-     _ -> buffer ++  zipit'' (Map.insert key (Map.size library) library) headxs tailxs
+     Just n -> zipit' library (integerToBooleanListPadded 8 n) tailxs
+     _ -> buffer ++  zipit' (Map.insert key (Map.size library) library) headxs tailxs

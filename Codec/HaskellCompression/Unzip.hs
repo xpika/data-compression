@@ -7,19 +7,15 @@ import qualified Data.ByteString as B (pack,unpack,ByteString)
 import Control.Arrow
 import Codec.HaskellCompression.Shared
 
-unzipit = viaNum (viaBool unzipit')
+unzipit = via (\xs -> let (headxs,tailxs) = things xs in if xs == [] then [] else  unzipit' initdb headxs tailxs)
 
-unzipit' :: [Bool] -> [Bool]
-unzipit' xs = if xs == [] then [] else  unzipit'' initdb headxs tailxs
-  where (headxs,tailxs) = things xs
-
-unzipit'' :: Map.Bimap [Bool] Int -> [Bool] -> [Bool] -> [Bool]
-unzipit'' library buffer xs = let
+unzipit' :: Map.Bimap [Bool] Int -> [Bool] -> [Bool] -> [Bool]
+unzipit' library buffer xs = let
 	(headxs,tailxs) = things xs
 	Just key = (booleanListToInteger buffer) `Map.lookupR` library
  	librarySize = Map.size library 
 	ref =  fromJust (if ((booleanListToInteger headxs) ==  librarySize) then Just key else (booleanListToInteger headxs) `Map.lookupR` library) 
 	in if xs == [] then library Map.!> (booleanListToInteger buffer)
 				   else case Map.lookup (buffer++headxs) library of
-	  Just n ->  unzipit'' library (integerToBooleanListPadded 8 n) tailxs
-	  _ -> (key) ++ unzipit'' (Map.insert (key ++ (take 8 ref)) librarySize library) headxs tailxs 
+	  Just n ->  unzipit' library (integerToBooleanListPadded 8 n) tailxs
+	  _ -> (key) ++ unzipit' (Map.insert (key ++ (take 8 ref)) librarySize library) headxs tailxs 
