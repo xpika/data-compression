@@ -8,11 +8,9 @@ examples = [
   ,"aa"
   ,"aaaaaa"
   ,"abababab"
-  --,"abcabcabcabcabcabc"
-  --,
+  ,"abcabcabcabcabcabc"
   ,"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam dictum nisi et ipsum ornare fermentum. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas nullam. "
-  --, 
-  --unlines $ take 8 $ nest 
+  ,unlines $ take 8 $ nest 
   ]
 
 nest =  [

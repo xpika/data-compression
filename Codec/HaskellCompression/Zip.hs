@@ -11,15 +11,15 @@ import Codec.HaskellCompression.Shared
 import QuickTrace
 
 zipit :: B.ByteString -> B.ByteString
-zipit = via (\xs -> let (headxs,tailxs) = splitAt 8 xs in if xs == [] then [] else  qg "outy" (length &&& booleanListToIntegers 8 &&& booleanListToIntegers 9 &&& id) $ zipit' initdb headxs tailxs)
+zipit = via (\xs -> let (headxs,tailxs) = splitAt 8 xs in if xs == [] then [] else  zipit' initdb headxs tailxs)
 
 zipit' :: Map.Bimap [Bool] Int -> [Bool] -> [Bool] -> [Bool]
 zipit' library buffer xs = let
   (headxs,tailxs) = splitAt 8 xs
   key = buffer ++ headxs
   librarySize = Map.size library
-  keyLength = ceiling . logBase 2. fromIntegral. (+1) $ librarySize
-  in  if xs == [] then padBooleanList keyLength buffer else case Map.lookup key library of
-    Just n -> zipit' library (integerToBooleanListPadded keyLength n) tailxs
-    _ -> (qd (buffer,keyLength) $ padBooleanList 9 buffer) ++ zipit' (Map.insert key librarySize library) headxs tailxs
+  keyLength = 8
+  in if xs == [] then buffer else case Map.lookup key library of
+    Just n -> zipit' library (integerToBooleanListPadded 8 n) tailxs
+    _ -> buffer ++ zipit' (Map.insert key librarySize library) headxs tailxs
 	
