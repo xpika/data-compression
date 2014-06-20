@@ -2,7 +2,7 @@ module Main where
 
 import Codec.HaskellCompression
 import qualified Data.ByteString.Char8 as B
-import Codec.ExampleStrings 
+import Codec.HaskellCompression.ExampleStrings 
 
 zipitString :: [Char] -> B.ByteString
 zipitString  = zipit  . B.pack
