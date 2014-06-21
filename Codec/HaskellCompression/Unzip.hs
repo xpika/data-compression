@@ -9,15 +9,17 @@ import Codec.HaskellCompression.Shared
 import QuickTrace
 import Debug.Trace
 
-unzipit = via (\xs -> let (headxs,tailxs) = splitAt 8 xs in if xs == [] then [] else unzipit' initdb headxs tailxs)
+takeLast n xs = drop (length xs-n) xs
 
-unzipit' :: Map.Bimap [Bool] Int -> [Bool] -> [Bool] -> [Bool]
+unzipit = via (\xs -> let (headxs,tailxs) = splitAt 9 ( {- qmf "l0" id $ -} (xs)) in if xs == [] then [] else {- qmf "l" (const xs &&& id) $ -} unzipit' initdb headxs tailxs)
+
+unzipit' :: Map.Bimap [[Bool]] Int -> [Bool] -> [Bool] -> [Bool]
 unzipit' library buffer xs = let
 	librarySize = Map.size library
-	(headxs,tailxs) = splitAt 8 xs
+	(headxs,tailxs) = splitAt 9 xs
 	Just key = booleanListToInteger buffer `Map.lookupR` library
 	ref = fromJust $ if (booleanListToInteger headxs) == librarySize then Just key else booleanListToInteger headxs `Map.lookupR` library
-	in if xs == [] then library Map.!> (booleanListToInteger buffer)
-			       else case Map.lookup (buffer++headxs) library of
-	  Just n -> unzipit' library (integerToBooleanListPadded 8 n) tailxs
-	  _ -> key ++ (unzipit' (Map.insert (key ++ (take 8 ref)) librarySize library) headxs tailxs)
+	in if length headxs < 9 then concat $ map (takeLast 8) $ library Map.!> booleanListToInteger buffer
+			                else case Map.lookup [buffer,headxs] library of
+	  Just n -> unzipit' library (integerToBooleanListPadded 9 n) tailxs
+	  Nothing -> (concat $ map (take 8) key) ++ (unzipit' (Map.insert (key++(take 1 ref)) librarySize library) headxs tailxs)

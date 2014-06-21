@@ -11,9 +11,9 @@ viaNum f d = B.pack ( map fromIntegral (f ( map fromIntegral (B.unpack d))))
 
 viaBool f ns = int8Chunks (f (toBoolean8s ns))
 
-lengthOfKeys = 127
+lengthOfKeys = 255
 
-initdb :: Map.Bimap [Bool] Int
-initdb = Map.fromList (Data.List.zipWith (\x y ->(x,y)) (integersToBooleanListsPadded 8 [0..lengthOfKeys]) [0..])
+initdb :: Map.Bimap [[Bool]] Int
+initdb = Map.fromList (Data.List.zipWith (\x y ->([x],y)) (integersToBooleanListsPadded 9 [0..lengthOfKeys]) [0..])
 
 via = viaNum . viaBool
