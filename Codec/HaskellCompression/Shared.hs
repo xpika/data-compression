@@ -17,4 +17,7 @@ lengthOfKeys = (2 ^ (startingLength - 1)) - 1
 initdb :: Map.Bimap [[Bool]] Int
 initdb = Map.fromList (Data.List.zipWith (\x y ->([x],y)) (integersToBooleanListsPadded startingLength [0..lengthOfKeys]) [0..])
 
+initdb2 :: Map.Bimap (Maybe Int,Int) Int
+initdb2 = Map.fromList (Data.List.zipWith (\x y ->((Nothing,fromIntegral x),fromIntegral y)) [0..lengthOfKeys] [0..])
+
 via = viaNum . viaBool
