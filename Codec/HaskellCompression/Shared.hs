@@ -9,11 +9,12 @@ import Control.Arrow
 
 viaNum f d = B.pack ( map fromIntegral (f ( map fromIntegral (B.unpack d))))
 
+startingLength = fromIntegral 9 
 viaBool f ns = int8Chunks (f (toBoolean8s ns))
 
-lengthOfKeys = 255
+lengthOfKeys = (2 ^ (startingLength - 1)) - 1
 
 initdb :: Map.Bimap [[Bool]] Int
-initdb = Map.fromList (Data.List.zipWith (\x y ->([x],y)) (integersToBooleanListsPadded 9 [0..lengthOfKeys]) [0..])
+initdb = Map.fromList (Data.List.zipWith (\x y ->([x],y)) (integersToBooleanListsPadded startingLength [0..lengthOfKeys]) [0..])
 
 via = viaNum . viaBool

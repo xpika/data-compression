@@ -11,15 +11,15 @@ import Debug.Trace
 
 takeLast n xs = drop (length xs-n) xs
 
-unzipit = via (\xs -> let (headxs,tailxs) = splitAt 9 ( {- qmf "l0" id $ -} (xs)) in if xs == [] then [] else {- qmf "l" (const xs &&& id) $ -} unzipit' initdb headxs tailxs)
+unzipit = via (\xs -> let (headxs,tailxs) = splitAt (fromIntegral startingLength) (qmf "l0" (booleanListToIntegers startingLength {- &&& id -}) xs) in if xs == [] then [] else unzipit' initdb headxs tailxs)
 
 unzipit' :: Map.Bimap [[Bool]] Int -> [Bool] -> [Bool] -> [Bool]
 unzipit' library buffer xs = let
 	librarySize = Map.size library
-	(headxs,tailxs) = splitAt 9 xs
+	(headxs,tailxs) = splitAt (fromIntegral startingLength) xs
 	Just key = booleanListToInteger buffer `Map.lookupR` library
 	ref = fromJust $ if (booleanListToInteger headxs) == librarySize then Just key else booleanListToInteger headxs `Map.lookupR` library
-	in if length headxs < 9 then concat $ map (takeLast 8) $ library Map.!> booleanListToInteger buffer
-			                else case Map.lookup [buffer,headxs] library of
-	  Just n -> unzipit' library (integerToBooleanListPadded 9 n) tailxs
-	  Nothing -> (concat $ map (take 8) key) ++ (unzipit' (Map.insert (key++(take 1 ref)) librarySize library) headxs tailxs)
+	in if length headxs < (fromIntegral startingLength) then concat $ map (takeLast 8) $ library Map.!> booleanListToInteger buffer
+                                                            else case Map.lookup [buffer,headxs] library of
+	  Just n -> unzipit' library (integerToBooleanListPadded (fromIntegral startingLength) n) tailxs
+	  Nothing -> (concat $ map (takeLast 8) key) ++ (unzipit' (Map.insert (key++(take 1 ref)) librarySize library) headxs tailxs)
