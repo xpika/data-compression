@@ -15,9 +15,9 @@ zipit = via (\xs -> let (headxs,tailxs) = splitAt 8 xs in if xs == [] then [] el
 zipit' :: Map.Bimap (Maybe Int,Int) Int -> Int -> [Bool] -> [Bool]
 zipit' library buffer xs = let
   librarySize = Map.size library
-  keyLength = boolsRequiredForInteger . (+1) $ librarySize
+  keyLength = boolsRequiredForInteger . (+1) $ librarySize 
   (headxs,tailxs) = splitAt 8 xs
   key = (Just buffer, booleanListToInteger headxs)
-  in if xs == [] then (integerToBooleanListPadded (fromIntegral keyLength) buffer) else  case Map.lookup key library of
+  in if xs == [] then (integerToBooleanListPadded (fromIntegral keyLength) buffer) else case Map.lookup key library of
     Just n -> zipit' library n tailxs
     _ -> integerToBooleanListPadded (fromIntegral keyLength) buffer ++ zipit' (Map.insert key librarySize library) (booleanListToInteger headxs) tailxs
