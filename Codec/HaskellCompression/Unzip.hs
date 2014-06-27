@@ -16,10 +16,11 @@ unzipit = via (\xs -> let (headxs,tailxs) = splitAt (fromIntegral startingLength
 unzipit' :: Map.Bimap [[Bool]] Int -> [Bool] -> [Bool] -> [Bool]
 unzipit' library buffer xs = let
 	librarySize = Map.size library
-	(headxs,tailxs) = splitAt (fromIntegral startingLength) xs
+        keyLength = qt $ boolsRequiredForInteger . (+1) $ librarySize 
+	(headxs,tailxs) = splitAt (fromIntegral keyLength) xs
 	Just key = booleanListToInteger buffer `Map.lookupR` library
 	ref = fromJust $ if (booleanListToInteger headxs) == librarySize then Just key else booleanListToInteger headxs `Map.lookupR` library
-	in if length headxs < (fromIntegral startingLength) then concat $ map (takeLast 8) $ library Map.!> booleanListToInteger buffer
-                                                            else case Map.lookup [buffer,headxs] library of
-	  Just n -> unzipit' library (integerToBooleanListPadded (fromIntegral startingLength) n) tailxs
+	in if length headxs < (fromIntegral keyLength) then concat $ map (takeLast 8) $ library Map.!> booleanListToInteger buffer
+                                                       else case Map.lookup [buffer,headxs] library of
+	  Just n -> unzipit' library (integerToBooleanListPadded (fromIntegral keyLength) n) tailxs
 	  Nothing -> (concat $ map (takeLast 8) key) ++ (unzipit' (Map.insert (key++(take 1 ref)) librarySize library) headxs tailxs)
