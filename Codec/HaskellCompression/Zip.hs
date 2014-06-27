@@ -10,14 +10,14 @@ import Codec.HaskellCompression.Shared
 import QuickTrace
 
 zipit :: B.ByteString -> B.ByteString
-zipit = via (\xs -> let (headxs,tailxs) = splitAt 8 xs in if xs == [] then [] else {- qmf "o" (const xs &&& id &&& length . id ) $ -} zipit' initdb2 (booleanListToInteger headxs) tailxs)
+zipit = via (\xs -> let (headxs,tailxs) = splitAt 8 xs in if xs == [] then [] else zipit' initdb2 (booleanListToInteger headxs) tailxs)
 
 zipit' :: Map.Bimap (Maybe Int,Int) Int -> Int -> [Bool] -> [Bool]
 zipit' library buffer xs = let
   librarySize =  Map.size library
-  keyLength =   boolsRequiredForInteger . (+1) $ librarySize 
+  keyLength = boolsRequiredForInteger librarySize 
   (headxs,tailxs) = splitAt 8 xs
   key = (Just buffer, booleanListToInteger headxs)
   in if xs == [] then (integerToBooleanListPadded (fromIntegral keyLength) buffer) else case Map.lookup key library of
     Just n -> zipit' library n tailxs
-    _ -> integerToBooleanListPadded (fromIntegral keyLength) buffer ++ zipit' (Map.insert key librarySize library) (booleanListToInteger headxs) tailxs
+    _ -> ( integerToBooleanListPadded (fromIntegral keyLength) buffer) ++ zipit' (Map.insert key librarySize library) (booleanListToInteger headxs) tailxs
