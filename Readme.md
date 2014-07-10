@@ -2,8 +2,12 @@ haskell-compression
 =======
 
 ```haskell
-*Codec.HaskellCompression Data.ByteString.Char8> zipit (pack "The quick brown fox jumps over the lazy dog")
-"The quick brown fox jumps over t\129 lazy dog"
-*Codec.HaskellCompression Data.ByteString.Char8> unzipit it
-"The quick brown fox jumps over the lazy dog"
+Codec.HaskellCompression Data.ByteString.Lazy.Char8> let str = "The rain in spain falls mainly on the plain"
+*Codec.HaskellCompression Data.ByteString.Lazy.Char8> Prelude.length str
+43
+*Codec.HaskellCompression Data.ByteString.Lazy.Char8> let zipped = zipit (pack str)
+*Codec.HaskellCompression Data.ByteString.Lazy.Char8> Data.ByteString.Lazy.Char8.length zipped
+39
+*Codec.HaskellCompression Data.ByteString.Lazy.Char8> unzipit zipped
+"The rain in spain falls mainly on the plain"
 ```
