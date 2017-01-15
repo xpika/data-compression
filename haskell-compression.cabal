@@ -4,9 +4,10 @@ cabal-version: >=1.2
 build-type: Simple
 license: BSD3
 maintainer: hawk.alan@gmail.com
-homepage: codekinder.com
+homepage: http://xy30.com
 category: System
 author: Alan Hawkins
+synopsis: compress files
 
 source-repository head
     type: git
