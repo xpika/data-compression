@@ -1,5 +1,5 @@
 name: haskell-compression
-version: 0.2
+version: 0.3
 cabal-version: >=1.2
 build-type: Simple
 license: GPL-3
@@ -23,17 +23,18 @@ library
           base  < 10000
         , containers  <10000
         , bytestring <10000
-        ,bimap <10000
-        ,booleanlist <10000
+        , bimap <10000
+        , boolean-list <10000
     default-language:    Haskell2010
 
 executable hs-compress
     main-is: Main.hs
     build-depends:
-        base <10000
+         base <10000
         ,containers <10000
         ,bytestring <10000
         ,bimap <10000
+        ,boolean-list <10000
     default-language:    Haskell2010
 
 

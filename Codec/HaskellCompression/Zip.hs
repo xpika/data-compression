@@ -7,7 +7,6 @@ import qualified Data.ByteString as B (pack,unpack,ByteString)
 import Control.Arrow
 import Codec.HaskellCompression.Shared
 
-import QuickTrace
 
 zipit :: B.ByteString -> B.ByteString
 zipit = via (\xs -> let (headxs,tailxs) = splitAt 8 xs in if xs == [] then [] else zipit' initdb2 (booleanListToInteger headxs) tailxs)
