@@ -1,5 +1,5 @@
 name: haskell-compression
-version: 0.3
+version: 0.4
 cabal-version: >=1.2
 build-type: Simple
 license: GPL-3
@@ -17,6 +17,7 @@ source-repository head
     location: http://github.com/xpika/haskell-compression.git
 
 library
+    extensions: Safe
     exposed-modules:
         Codec.HaskellCompression
     build-depends:
@@ -28,6 +29,7 @@ library
     default-language:    Haskell2010
 
 executable hs-compress
+    extensions: Safe
     main-is: Main.hs
     build-depends:
          base <10000

@@ -6,7 +6,6 @@ import Data.BooleanList
 import qualified Data.ByteString as B (pack,unpack,ByteString)
 import Control.Arrow
 import Codec.HaskellCompression.Shared
-import Debug.Trace
 import Data.Char
 
 
